@@ -43,8 +43,8 @@ class TelemetryBuffer:
     def get_measurements(self) -> dict:
         return self.__measurements
 
-    def filter_by_device_id(self,device_id : int or list) -> dict:
-        if isinstance(device_id, int):
+    def filter_by_device_id(self,device_id : str or list[str]) -> dict:
+        if isinstance(device_id, str):
              return self.__measurements[f'{device_id}']
         else:
             device_id_dict  : dict = {}
@@ -54,6 +54,31 @@ class TelemetryBuffer:
                     device_id_dict[key] = self.__measurements[key]
                 pass
             return device_id_dict
+
+    def filter_by_metrics(self,metrics : str or list[str]) -> dict:
+        if isinstance(metrics, str):
+             return self.__measurements[f'{metrics}']
+        else:
+            metrics_dict  : dict = {}
+            for expected_metrics in metrics:
+                key = f'{expected_metrics}'
+                if key in self.__measurements:
+                    metrics_dict[key] = self.__measurements[key]
+                pass
+            return metrics_dict
+    @property
+    def count_measurements(self) -> int:
+        return len(self.__measurements)
+
+    @property
+    def clear_buffer(self) -> bool:
+        return len(self.__measurements) == 0
+
+    @clear_buffer.setter
+    def clear_buffer(self, clear_buffer: bool = True):
+        if clear_buffer:
+            self.__measurements.clear()
+
 
 
 
