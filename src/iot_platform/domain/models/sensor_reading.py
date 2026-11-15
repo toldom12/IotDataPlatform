@@ -1,3 +1,4 @@
+from collections import defaultdict
 from dataclasses import dataclass
 from datetime import UTC, datetime
 
@@ -6,8 +7,9 @@ class IsNotValidParameter(Exception):
     pass
 
 
-@dataclass
+@dataclass(frozen=True)
 class SensorReading:
+    name: str
     device_id : str
     metric: str
     value: float
@@ -20,9 +22,16 @@ class SensorReading:
         if not self.metric:
             raise IsNotValidParameter(f"Empty parameter: {self.metric}")
         if not self.value:
-            raise IsNotValidParameter(f"Empty parameter: {self.value}")
+            if self.value ==0 or self.value == 0.0:
+                pass
+            else:
+                raise IsNotValidParameter(f"Empty parameter: {self.value}")
         if not self.unit:
             raise IsNotValidParameter(f"Empty parameter: {self.unit}")
+        #TODO better verifcation for timestamp :
+         # - datetime
+         # - utc zone
+         # - correctly time stamp for our system
         if not self.timestamp:
             raise IsNotValidParameter(f"Empty parameter: {self.timestamp}")
         if not isinstance(self.value,(float or int)):
@@ -34,11 +43,16 @@ class TelemetryBuffer:
         self.__measurements : dict = {}
 
     def add_measurements(self, meas: SensorReading or [SensorReading]) -> None:
-        if isinstance(meas, object):
-            meas = [meas]
-        for index, obj in enumerate(meas):
-            self.__measurements[f'{obj.device_id}'] = [obj.metric, obj.value, obj.unit, obj.timestamp]
-
+        meas = meas if isinstance(meas, list) else [meas]
+        measurements = self.__measurements.setdefault("measurements", {}) #
+        for obj in meas:
+           by_name = measurements.setdefault(obj.name, defaultdict(list))
+           by_name[obj.device_id].append({
+               "metric": obj.metric,
+               "value": obj.value,
+               "unit": obj.unit,
+               "timestamp": obj.timestamp,
+           })
     @property
     def get_measurements(self) -> dict:
         return self.__measurements
@@ -55,7 +69,7 @@ class TelemetryBuffer:
                 pass
             return device_id_dict
 
-    def filter_by_metrics(self,metrics : str or list[str]) -> dict:
+    def filter_by_metrics(self,metrics : str | list[str]) -> dict:
         if isinstance(metrics, str):
              return self.__measurements[f'{metrics}']
         else:
@@ -80,18 +94,9 @@ class TelemetryBuffer:
             self.__measurements.clear()
 
 
-
-
-
-
-
-
-
-
-
-
 if __name__ == "__main__":
     reading = SensorReading(
+        name = 'temp_sensor',
         device_id="TEMP-001",
         metric="temperature",
         value=23.5,
@@ -99,7 +104,8 @@ if __name__ == "__main__":
         timestamp=datetime.now(UTC)
     )
     reading1 = SensorReading(
-        device_id="TEMP-002",
+        name='temp_sensor',
+        device_id="TEMP-001",
         metric="temperature",
         value=23.5,
         unit="C",
@@ -108,5 +114,5 @@ if __name__ == "__main__":
     a = TelemetryBuffer()
     a.add_measurements(meas=reading)
     a.add_measurements(meas=reading1)
-    results = a.filter_by_device_id(device_id=['TEMP-001','TEMP-002'])
+    results = a.filter_by_device_id(device_id=['TEMP-001','TEMP-001'])
     pass
