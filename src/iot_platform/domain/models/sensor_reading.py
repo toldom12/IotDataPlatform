@@ -82,7 +82,7 @@ class TelemetryBuffer:
                  if metrics == data_metrics['metric']:
                      results_metrics.append(data_metrics)
              return {'metrics': results_metrics}
-        else:
+        else: # TODO: metrics filtering  in queue
             metrics_dict  : dict = {}
             for expected_metrics in metrics:
                 key = expected_metrics
@@ -121,10 +121,22 @@ if __name__ == "__main__":
         unit="C",
         timestamp=datetime.now(UTC)
     )
+
+    reading2 = SensorReading(
+        name='humidtity_sensor',
+        device_id="HUM-002",
+        metric="humidity",
+        value=23.5,
+        unit="C",
+        timestamp=datetime.now(UTC)
+    )
     a = TelemetryBuffer()
     a.add_measurements(meas=reading)
     a.add_measurements(meas=reading1)
+    a.add_measurements(meas=reading2)
     results = a.filter_by_device_id(name='temp_sensor', device_id=['TEMP-001','TEMP-001'])
-    results2 = a.filter_by_metrics(name='temp_sensor', device_id='TEMP-001',metrics = 'temperature' )
+    results2 = a.filter_by_metrics(name=['temp_sensor', 'humidity_sensor'],
+                                   device_id=['TEMP-001','HUM-002'],
+                                    metrics = ['temperature','humidity'])
     # results = a.filter_by_device_id(name='temp_sensor', device_id='TEMP-003')
     pass
