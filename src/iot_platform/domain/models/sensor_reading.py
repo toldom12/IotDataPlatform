@@ -42,7 +42,7 @@ class TelemetryBuffer:
     def __init__(self):
         self.__measurements : dict = {}
 
-    def add_measurements(self, meas: SensorReading or [SensorReading]) -> None:
+    def add_measurements(self, meas: SensorReading or list[SensorReading]) -> None:
         meas = meas if isinstance(meas, list) else [meas]
         measurements = self.__measurements.setdefault("measurements", {}) #
         for obj in meas:
@@ -57,29 +57,39 @@ class TelemetryBuffer:
     def get_measurements(self) -> dict:
         return self.__measurements
 
-    def filter_by_device_id(self,device_id : str or list[str]) -> dict:
+    def filter_by_device_id(self,
+                            device_id : str or list[str],
+                            name: str) -> dict:
         if isinstance(device_id, str):
-             return self.__measurements[f'{device_id}']
+             return {"device_id" :self.__measurements['measurements'][name][f'{device_id}']}
         else:
             device_id_dict  : dict = {}
             for expected_device in device_id:
-                key = f'{expected_device}'
-                if key in self.__measurements:
-                    device_id_dict[key] = self.__measurements[key]
-                pass
+                key = expected_device
+                if key in self.__measurements['measurements'][name]:
+                    device_id_dict[key] = self.__measurements['measurements'][name][key]
+
             return device_id_dict
 
-    def filter_by_metrics(self,metrics : str | list[str]) -> dict:
+    def filter_by_metrics(self,
+                          device_id: str | list[str],
+                          name: str,
+                          metrics : str | list[str]) -> dict:
         if isinstance(metrics, str):
-             return self.__measurements[f'{metrics}']
+             results_metrics : list = []
+             readings = self.__measurements['measurements'][name][f'{device_id}']
+             for data_metrics in readings:
+                 if metrics == data_metrics['metric']:
+                     results_metrics.append(data_metrics)
+             return {'metrics': results_metrics}
         else:
             metrics_dict  : dict = {}
             for expected_metrics in metrics:
-                key = f'{expected_metrics}'
-                if key in self.__measurements:
-                    metrics_dict[key] = self.__measurements[key]
-                pass
+                key = expected_metrics
+                if key in self.__measurements['measurements'][name]:
+                    metrics_dict[key] = self.__measurements['measurements'][name][key]
             return metrics_dict
+
     @property
     def count_measurements(self) -> int:
         return len(self.__measurements)
@@ -114,5 +124,7 @@ if __name__ == "__main__":
     a = TelemetryBuffer()
     a.add_measurements(meas=reading)
     a.add_measurements(meas=reading1)
-    results = a.filter_by_device_id(device_id=['TEMP-001','TEMP-001'])
+    results = a.filter_by_device_id(name='temp_sensor', device_id=['TEMP-001','TEMP-001'])
+    results2 = a.filter_by_metrics(name='temp_sensor', device_id='TEMP-001',metrics = 'temperature' )
+    # results = a.filter_by_device_id(name='temp_sensor', device_id='TEMP-003')
     pass
