@@ -1,9 +1,8 @@
-from csv import excel
 from logging import exception
 
 import pytest
 
-from iot_platform.domain.models.sensor_reading import SensorReading, IsNotValidParameter
+from iot_platform.domain.models.sensor_reading import IsNotValidParameter, SensorReading
 from iot_platform.tests.units.tools_test_sensor_reading import ObjValidation
 from tools.TestStepsVerificator.StepsVerficator import TesStepsVerifcator
 
