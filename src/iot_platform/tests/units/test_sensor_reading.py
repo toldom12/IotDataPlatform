@@ -3,7 +3,7 @@ from logging import exception
 import pytest
 
 from iot_platform.domain.models.sensor_reading import IsNotValidParameter, SensorReading
-from iot_platform.tests.units.tools_test_sensor_reading import ObjValidation
+from iot_platform.tests.units.tools_test_sensor_reading import ObjValidation, CaseName
 from tools.TestStepsVerificator.StepsVerficator import TesStepsVerifcator
 
 
@@ -32,6 +32,10 @@ def test_create_obj_sensor_reading(data_obj: SensorReading):
 
     except exception as e:
         test.add_test(condition=False, fail_msg=f'Not expected exception {e}')
+
+    if data_obj.name in CaseName.ZeroValue:
+        test.add_test(condition=bool(data_obj.value == 0),
+                      fail_msg=f'Data obj is != value {data_obj.value}')
 
     assert test.expected_results == test.received_results
 

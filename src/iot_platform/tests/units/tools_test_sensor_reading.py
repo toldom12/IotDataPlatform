@@ -1,5 +1,5 @@
 from datetime import UTC, datetime
-from enum import Enum
+from enum import Enum, StrEnum
 from typing import NamedTuple
 
 
@@ -10,7 +10,10 @@ class CreateObj(NamedTuple):
     value: float
     unit: str
     timestamp: datetime
+    case_name: str = ''
 
+class CaseName(StrEnum):
+    ZeroValue = 'ZeroValue'
 
 
 class ObjValidation(Enum):
@@ -34,11 +37,12 @@ class ObjValidation(Enum):
 
     test_3 = CreateObj(
         name='temp_sensor',
-        device_id="",
+        device_id="TEMP-001",
         metric="temperature",
         value="23.5",
         unit="C",
-        timestamp=datetime.now(UTC)
+        timestamp=datetime.now(UTC),
+        case_name=''
     )
 
     test_4 = CreateObj(
@@ -47,7 +51,8 @@ class ObjValidation(Enum):
         metric="temperature",
         value=0,
         unit="C",
-        timestamp=datetime.now(UTC)
+        timestamp=datetime.now(UTC),
+        case_name = CaseName.ZeroValue
     )
 
     test_5 = CreateObj(
