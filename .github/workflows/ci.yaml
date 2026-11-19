@@ -61,7 +61,7 @@ jobs:
             --cov-report=term-missing
 
       - name: Run daily tests
-        if: env.TEST_SUITE == 'daily'
+        if: env.TEST_SUITE == 'daily' || env.TEST_SUITE == 'integration'
         run: pytest src/iot_platform/tests/units -m daily
 
       - name: Run integration tests
