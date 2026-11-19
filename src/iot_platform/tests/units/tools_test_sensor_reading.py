@@ -5,27 +5,40 @@ from typing import NamedTuple
 from iot_platform.domain.models.sensor_reading import SensorReading
 
 
-class CreateObj(Enum):
-    test_1 = SensorReading(
-        name='temp_sensor',
-        device_id="TEMP-001",
-        metric="temperature",
-        value=23.5,
-        unit="C",
-        timestamp=datetime.now(UTC))
+class CreateObj(NamedTuple):
+    name: str
+    device_id: str
+    metric: str
+    value: float
+    unit: str
+    timestamp: datetime
 
-    test2 = [SensorReading(
-        name='temp_sensor',
+
+
+class ObjValidation(Enum):
+    test_1 = CreateObj(
+        name='',
         device_id="TEMP-001",
         metric="temperature",
         value=23.5,
         unit="C",
-        timestamp=datetime.now(UTC)),
-        SensorReading(
-            name='temp_sensor',
-            device_id="TEMP-001",
-            metric="temperature",
-            value=23.5,
-            unit="C",
-            timestamp=datetime.now(UTC),
-    )]
+        timestamp=datetime.now(UTC)
+    )
+
+    test_2 = CreateObj(
+        name='temp_sensor',
+        device_id="",
+        metric="temperature",
+        value=23.5,
+        unit="C",
+        timestamp=datetime.now(UTC)
+    )
+
+    test_3 = CreateObj(
+        name='temp_sensor',
+        device_id="",
+        metric="temperature",
+        value="23.5",
+        unit="C",
+        timestamp=datetime.now(UTC)
+    )
