@@ -12,7 +12,6 @@ on:
         options:
           - all
           - unit
-          - daily
           - integration
           - quality
 
@@ -61,8 +60,8 @@ jobs:
             --cov-report=term-missing
 
       - name: Run daily tests
-        if: env.TEST_SUITE == 'daily' || env.TEST_SUITE == 'integration'
-        run: pytest src/iot_platform/tests/units -m daily
+        if: env.TEST_SUITE == 'integration'
+        run: pytest -m daily
 
       - name: Run integration tests
         if: env.TEST_SUITE == 'all' || env.TEST_SUITE == 'integration'

@@ -33,7 +33,7 @@ def test_create_obj_sensor_reading(data_obj: SensorReading):
     except exception as e:
         test.add_test(condition=False, fail_msg=f'Not expected exception {e}')
 
-    if data_obj.name in CaseName.ZeroValue:
+    if data_obj.name == CaseName.ZeroValue:
         test.add_test(condition=bool(data_obj.value == 0),
                       fail_msg=f'Data obj is != value {data_obj.value}')
 
