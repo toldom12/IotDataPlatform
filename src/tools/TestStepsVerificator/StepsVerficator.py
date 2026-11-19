@@ -1,4 +1,3 @@
-from typing import Optional
 
 
 class TesStepsVerifcator:
@@ -16,7 +15,7 @@ class TesStepsVerifcator:
 
     def add_test(self,
                  condition: bool,
-                 fail_msg: Optional[str]):
+                 fail_msg: str | None):
 
         if fail_msg is not None:
             self.received_results.append(condition if condition else fail_msg)
