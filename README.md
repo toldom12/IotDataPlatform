@@ -1,5 +1,7 @@
 # IoT Data Platform
 
+[![IoT Data Platform CI](https://github.com/toldom12/IotDataPlatform/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/toldom12/IotDataPlatform/actions/workflows/ci.yaml)
+
 An early-stage Python project for modeling IoT sensor readings and collecting telemetry. The repository currently contains core domain models, sensor device modules, and unit tests; ingestion services, persistence, and a runnable application entry point are not yet included.
 
 ## Requirements
@@ -43,7 +45,7 @@ src/iot_platform/
   tools/         Development utilities
 ```
 
-The package is configured in `pyproject.toml` and uses a `src` layout. Pytest is configured to discover tests under `tests/` and add `src/` to the import path. Development dependencies include pytest, pytest-cov, and Ruff.
+The package is configured in `pyproject.toml` and uses a `src` layout. Pytest discovers unit tests under `src/iot_platform/tests/units` and adds `src/` to the import path. The `daily` marker identifies tests selected by the integration workflow. Development dependencies include pytest, pytest-cov, and Ruff.
 
 ## Current scope
 
