@@ -55,9 +55,13 @@ jobs:
       - name: Run unit tests
         if: env.TEST_SUITE == 'all' || env.TEST_SUITE == 'unit'
         run: |
-          pytest tests/unit \
+          pytest src/iot_platform/tests/units \
             --cov=iot_platform \
             --cov-report=term-missing
+
+      - name: Run daily tests
+        if: env.TEST_SUITE == 'integration'
+        run: pytest -m daily
 
       - name: Run integration tests
         if: env.TEST_SUITE == 'all' || env.TEST_SUITE == 'integration'

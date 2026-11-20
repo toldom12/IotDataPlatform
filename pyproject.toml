@@ -21,9 +21,10 @@ dev = [
 where = ["src"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["src/iot_platform/tests/units"]
 pythonpath = ["src"]
 addopts = "-ra"
+markers = ["daily: tests intended to run as part of the daily suite"]
 
 [tool.ruff]
 line-length = 88

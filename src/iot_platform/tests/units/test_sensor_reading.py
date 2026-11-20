@@ -13,6 +13,7 @@ def test_create_obj_sensor_reading(data_obj: SensorReading):
     test = TesStepsVerifcator()
 
 
+
     name = data_obj.name
     device_id = data_obj.device_id
     metric = data_obj.metric
@@ -29,8 +30,6 @@ def test_create_obj_sensor_reading(data_obj: SensorReading):
                                    unit = unit,
                                    timestamp=timestamp)
 
-
-
     except IsNotValidParameter:
         test.add_test(condition=True, fail_msg='')
 
@@ -39,6 +38,7 @@ def test_create_obj_sensor_reading(data_obj: SensorReading):
 
     if data_obj.name == CaseName.ZeroValue:
         test.add_test(condition=bool(create_obj.value == 0),
+
                       fail_msg=f'Data obj is != value {data_obj.value}')
 
     assert test.expected_results == test.received_results

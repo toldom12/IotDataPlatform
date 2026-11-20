@@ -21,7 +21,7 @@ class Device(ABC):
             raise
 
     @abstractmethod
-    def generate_reading(self) -> None:
+    def generate_reading(self) -> SensorReading:
         pass
 
     @is_active.setter
