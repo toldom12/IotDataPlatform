@@ -3,8 +3,9 @@ from logging import exception
 import pytest
 
 from iot_platform.domain.models.sensor_reading import IsNotValidParameter, SensorReading
-from iot_platform.tests.units.tools_test_sensor_reading import ObjValidation, CaseName
+from iot_platform.tests.units.tools_test_sensor_reading import CaseName, ObjValidation
 from tools.TestStepsVerificator.StepsVerficator import TesStepsVerifcator
+
 
 @pytest.mark.daily
 @pytest.mark.parametrize("data_obj",[data.value for data in ObjValidation])
