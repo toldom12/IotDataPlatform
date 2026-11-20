@@ -33,7 +33,7 @@ class Device(ABC):
     def generate_reading(self) -> None | SensorReading:
         if not self.is_active:
             raise RuntimeError("Cannot generate reading: device is inactive")
-        self._generate_reading()
+        return self._generate_reading()
 
     @abstractmethod
     def _generate_reading(self) -> SensorReading | Any:
